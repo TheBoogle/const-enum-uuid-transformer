@@ -1,7 +1,7 @@
 {
 	"name": "const-enum-uuid-transformer",
 	"version": "1.0.0",
-	"main": "out/index.js", 
+	"main": "out/index.js",
 	"types": "out/index.d.ts",
 	"scripts": {
 		"build": "tsc",
@@ -12,6 +12,7 @@
 		"uuid": "^8.3.2"
 	},
 	"devDependencies": {
-		"@types/node": "^22.5.1"
+		"@types/node": "^22.5.1",
+		"@types/uuid": "^10.0.0"
 	}
 }
