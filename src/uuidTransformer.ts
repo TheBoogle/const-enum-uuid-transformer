@@ -22,29 +22,35 @@ function uuidTransformer(program: ts.Program): ts.TransformerFactory<ts.SourceFi
             process.stdout.write(`Processing source file: ${sourceFile.fileName}\n`);
 
             const visit: ts.Visitor = (node: ts.Node) => {
-                if (ts.isEnumDeclaration(node) && node.modifiers?.some(mod => mod.kind === ts.SyntaxKind.ConstKeyword)) {
-                    process.stdout.write(`Found const enum: ${node.name.text}\n`);
+                // Log every EnumDeclaration node found
+                if (ts.isEnumDeclaration(node)) {
+                    const isConstEnum = node.modifiers?.some(mod => mod.kind === ts.SyntaxKind.ConstKeyword);
+                    process.stdout.write(`Found enum: ${node.name.text}, isConst: ${isConstEnum}\n`);
 
-                    return ts.factory.updateEnumDeclaration(
-                        node,
-                        node.modifiers, // Keep the modifiers
-                        node.name,      // Keep the name
-                        ts.factory.createNodeArray(
-                            node.members.map(member => {
-                                const memberName = (member.name as ts.Identifier).text;
-                                process.stdout.write(`Processing enum member: ${memberName}\n`);
+                    if (isConstEnum) {
+                        process.stdout.write(`Processing const enum: ${node.name.text}\n`);
 
-                                const uuidValue = getOrCreateUUID(`${node.name.text}_${memberName}`);
-                                process.stdout.write(`Updated member ${memberName} with UUID: ${uuidValue}\n`);
+                        return ts.factory.updateEnumDeclaration(
+                            node,
+                            node.modifiers, // Keep the modifiers
+                            node.name,      // Keep the name
+                            ts.factory.createNodeArray(
+                                node.members.map(member => {
+                                    const memberName = (member.name as ts.Identifier).text;
+                                    process.stdout.write(`Processing enum member: ${memberName}\n`);
 
-                                return ts.factory.updateEnumMember(
-                                    member,
-                                    member.name,
-                                    ts.factory.createStringLiteral(uuidValue)
-                                );
-                            })
-                        )
-                    );
+                                    const uuidValue = getOrCreateUUID(`${node.name.text}_${memberName}`);
+                                    process.stdout.write(`Updated member ${memberName} with UUID: ${uuidValue}\n`);
+
+                                    return ts.factory.updateEnumMember(
+                                        member,
+                                        member.name,
+                                        ts.factory.createStringLiteral(uuidValue)
+                                    );
+                                })
+                            )
+                        );
+                    }
                 }
                 return ts.visitEachChild(node, visit, context);
             };
