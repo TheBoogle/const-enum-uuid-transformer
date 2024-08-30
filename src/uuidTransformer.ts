@@ -22,17 +22,20 @@ function uuidTransformer(program: ts.Program): ts.TransformerFactory<ts.SourceFi
             process.stdout.write(`Processing source file: ${sourceFile.fileName}\n`);
 
             const visit: ts.Visitor = (node: ts.Node) => {
-                // Check for const enums specifically
+                // Check for enum declarations
                 if (ts.isEnumDeclaration(node)) {
+                    // Check for the 'const' keyword among modifiers
                     const isConstEnum = node.modifiers?.some(mod => mod.kind === ts.SyntaxKind.ConstKeyword);
-                    process.stdout.write(`Found enum: ${node.name.text}, isConst: ${isConstEnum}\n`);
+                    const isExported = node.modifiers?.some(mod => mod.kind === ts.SyntaxKind.ExportKeyword);
+
+                    process.stdout.write(`Found enum: ${node.name.text}, isConst: ${isConstEnum}, isExported: ${isExported}\n`);
 
                     if (isConstEnum) {
                         process.stdout.write(`Processing const enum: ${node.name.text}\n`);
 
                         return ts.factory.updateEnumDeclaration(
                             node,
-                            node.modifiers, // Keep the modifiers
+                            node.modifiers, // Keep the modifiers (including export)
                             node.name,      // Keep the name
                             ts.factory.createNodeArray(
                                 node.members.map(member => {
