@@ -22,12 +22,14 @@ export class TransformContext {
         public config: TransformerConfig,
     ) {
         this.factory = context.factory;
+        process.stdout.write(`TransformContext initialized.\n`);
     }
 
     /**
      * Transforms the children of the specified node.
      */
     transform<T extends ts.Node>(node: T): T {
+        process.stdout.write(`Transforming node: ${ts.SyntaxKind[node.kind]}\n`);
         return ts.visitEachChild(node, (node) => visitNode(this, node), this.context);
     }
 
@@ -38,27 +40,31 @@ export class TransformContext {
         if (!this.uuidMap.has(name)) {
             const uuid = uuidv4();
             this.uuidMap.set(name, uuid);
-            console.log(`Generated new UUID for ${name}: ${uuid}`);
+            process.stdout.write(`Generated new UUID for ${name}: ${uuid}\n`);
+        } else {
+            process.stdout.write(`Using cached UUID for ${name}: ${this.uuidMap.get(name)}\n`);
         }
         return this.uuidMap.get(name)!;
     }
 }
 
 function visitEnumDeclaration(context: TransformContext, node: ts.EnumDeclaration): ts.EnumDeclaration | ts.Node[] {
+    process.stdout.write(`Visiting enum declaration: ${node.name.text}\n`);
     const isConstEnum = node.modifiers?.some(mod => mod.kind === ts.SyntaxKind.ConstKeyword);
-    
+
     if (isConstEnum) {
-        console.log(`Processing const enum: ${node.name.text}`);
+        process.stdout.write(`Processing const enum: ${node.name.text}\n`);
         
-        return context.factory.updateEnumDeclaration(
+        const updatedEnum = context.factory.updateEnumDeclaration(
             node,
             node.modifiers,
             node.name,
             context.factory.createNodeArray(
                 node.members.map(member => {
                     const memberName = (member.name as ts.Identifier).text;
+                    process.stdout.write(`Processing member: ${memberName}\n`);
                     const uuidValue = context.getOrCreateUUID(`${node.name.text}_${memberName}`);
-                    console.log(`Updated member ${memberName} with UUID: ${uuidValue}`);
+                    process.stdout.write(`Updated member ${memberName} with UUID: ${uuidValue}\n`);
                     return context.factory.updateEnumMember(
                         member,
                         member.name,
@@ -67,16 +73,22 @@ function visitEnumDeclaration(context: TransformContext, node: ts.EnumDeclaratio
                 })
             )
         );
+
+        process.stdout.write(`Finished processing const enum: ${node.name.text}\n`);
+        return updatedEnum;
     }
+
+    process.stdout.write(`Skipping non-const enum: ${node.name.text}\n`);
     return node;
 }
 
 function visitNode(context: TransformContext, node: ts.Node): ts.Node | ts.Node[] {
+    process.stdout.write(`Visiting node: ${ts.SyntaxKind[node.kind]}\n`);
+
     if (ts.isEnumDeclaration(node)) {
         return visitEnumDeclaration(context, node);
     }
 
-    // We encountered a node that we don't handle above,
-    // but we should keep iterating the AST in case we find something we want to transform.
+    // Continue traversing the AST
     return context.transform(node);
 }
