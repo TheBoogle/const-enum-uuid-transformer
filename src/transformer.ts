@@ -85,6 +85,12 @@ function visitEnumDeclaration(context: TransformContext, node: ts.EnumDeclaratio
 function visitNode(context: TransformContext, node: ts.Node): ts.Node | ts.Node[] {
     process.stdout.write(`Visiting node: ${ts.SyntaxKind[node.kind]}\n`);
 
+    // Skip JSDoc nodes to avoid getting stuck in these nodes
+    if (ts.isJSDoc(node) || ts.isJSDocAllType(node)) {
+        process.stdout.write(`Skipping JSDoc or JSDocAllType node.\n`);
+        return node;
+    }
+
     if (ts.isEnumDeclaration(node)) {
         return visitEnumDeclaration(context, node);
     }
