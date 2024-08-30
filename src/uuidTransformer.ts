@@ -10,16 +10,12 @@ function uuidTransformer(program: ts.Program): ts.TransformerFactory<ts.SourceFi
                 process.stdout.write(`Visiting node: ${ts.SyntaxKind[node.kind]}\n`);
 
                 if (ts.isEnumDeclaration(node)) {
-                    process.stdout.write(`Found enum: ${node.name.text}\n`);
-                    
                     const isConstEnum = node.modifiers?.some(mod => mod.kind === ts.SyntaxKind.ConstKeyword);
-                    const isExported = node.modifiers?.some(mod => mod.kind === ts.SyntaxKind.ExportKeyword);
-                    
-                    process.stdout.write(`Enum isConst: ${isConstEnum}, isExported: ${isExported}\n`);
-                    
+                    process.stdout.write(`Found enum: ${node.name.text}, isConst: ${isConstEnum}\n`);
+
                     if (isConstEnum) {
                         process.stdout.write(`Processing const enum: ${node.name.text}\n`);
-                        
+
                         return ts.factory.updateEnumDeclaration(
                             node,
                             node.modifiers,
@@ -28,12 +24,10 @@ function uuidTransformer(program: ts.Program): ts.TransformerFactory<ts.SourceFi
                                 node.members.map(member => {
                                     const memberName = (member.name as ts.Identifier).text;
                                     process.stdout.write(`Processing member: ${memberName}\n`);
-                                    
-                                    const uuidValue = `${node.name.text}_${memberName}`;
                                     return ts.factory.updateEnumMember(
                                         member,
                                         member.name,
-                                        ts.factory.createStringLiteral(uuidValue)
+                                        ts.factory.createStringLiteral(`UUID_${memberName}`)
                                     );
                                 })
                             )
