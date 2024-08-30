@@ -1,0 +1,13 @@
+{
+	"name": "ts-transformer-uuid",
+	"version": "1.0.0",
+	"main": "lib/uuidTransformer.js",
+	"types": "lib/uuidTransformer.d.ts",
+	"scripts": {
+	  "build": "tsc"
+	},
+	"dependencies": {
+	  "typescript": "^4.0.0",
+	  "uuid": "^8.3.2"
+	}
+  }
