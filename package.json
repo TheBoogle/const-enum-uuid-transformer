@@ -1,8 +1,8 @@
 {
 	"name": "ts-transformer-uuid",
 	"version": "1.0.0",
-	"main": "lib/uuidTransformer.js",
-	"types": "lib/uuidTransformer.d.ts",
+	"main": "out/uuidTransformer.js",
+	"types": "out/uuidTransformer.d.ts",
 	"scripts": {
 	  "build": "tsc"
 	},
@@ -11,3 +11,4 @@
 	  "uuid": "^8.3.2"
 	}
   }
+  
