@@ -4,7 +4,8 @@
 	"main": "out/uuidTransformer.js",
 	"types": "out/uuidTransformer.d.ts",
 	"scripts": {
-	  "build": "tsc"
+	  "build": "tsc",
+	  "prepare": "npm run build"
 	},
 	"dependencies": {
 	  "typescript": "^4.0.0",
