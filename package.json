@@ -1,18 +1,37 @@
 {
 	"name": "const-enum-uuid-transformer",
 	"version": "1.0.0",
+	"description": "A transformer that replaces const enum members with UUIDs.",
 	"main": "out/index.js",
-	"types": "out/index.d.ts",
-	"scripts": {
-		"build": "tsc",
-		"prepare": "tsc"
+	"author": "Your Name <your.email@example.com> (https://github.com/yourusername)",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/yourusername/const-enum-uuid-transformer.git"
 	},
-	"dependencies": {
-		"typescript": "^4.0.0",
-		"uuid": "^8.3.2"
+	"peerDependencies": {
+		"typescript": "^5.2.2"
+	},
+	"scripts": {
+		"prepare": "npm run build",
+		"build": "tsc",
+		"watch": "tsc -w"
 	},
 	"devDependencies": {
-		"@types/node": "^22.5.1",
-		"@types/uuid": "^10.0.0"
-	}
+		"typescript": "^5.2.2",
+		"@types/node": "^18.18.6",
+		"@types/uuid": "^8.3.4",
+		"eslint": "^8.0.0",
+		"prettier": "^2.2.1",
+		"eslint-config-prettier": "^8.0.0",
+		"eslint-plugin-prettier": "^4.0.0",
+		"@typescript-eslint/eslint-plugin": "^5.0.0",
+		"@typescript-eslint/parser": "^5.0.0"
+	},
+	"dependencies": {
+		"uuid": "^8.3.2"
+	},
+	"files": [
+		"out"
+	]
 }
