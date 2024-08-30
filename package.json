@@ -1,5 +1,5 @@
 {
-	"name": "ts-transformer-uuid",
+	"name": "const-enum-uuid-transformer",
 	"version": "1.0.0",
 	"main": "out/uuidTransformer.js",
 	"types": "out/uuidTransformer.d.ts",
