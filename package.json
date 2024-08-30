@@ -1,8 +1,8 @@
 {
 	"name": "const-enum-uuid-transformer",
 	"version": "1.0.0",
-	"main": "out/uuidTransformer.js",
-	"types": "out/uuidTransformer.d.ts",
+	"main": "out/index.js", 
+	"types": "out/index.d.ts",
 	"scripts": {
 		"build": "tsc",
 		"prepare": "tsc"
